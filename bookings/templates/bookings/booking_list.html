@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Бронирования – MeetSync
+{% endblock %}
+
+{% block content %}
+    <h1>Онлайн-встречи (бронирования)</h1>
+    {% for booking in bookings %}
+        <article class="card room-card mb-3">
+            <div class="card-body">
+                <h2 class="card-title h5">
+                    <a href="{% url 'bookings:detail' booking.id %}">
+                        Бронирование №{{ booking.id }}
+                    </a>
+                </h2>
+                <p class="card-text">
+                    <strong>Онлайн-комната:</strong> {{ booking.room.name }}
+                </p>
+                <p class="card-text">
+                    <strong>Дата:</strong> {{ booking.booking_date }}
+                </p>
+                <p class="card-text">
+                    <strong>Организатор:</strong> {{ booking.user.name }}
+                </p>
+                <p class="card-text">
+                    <strong>Статус:</strong>
+                    {% include "bookings/includes/booking_status.html" %}
+                </p>
+            </div>
+        </article>
+    {% empty %}
+        <p>Бронирования не найдены.</p>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Главная – MeetSync
+{% endblock %}
+
+{% block content %}
+    <h1 class="display-4">MeetSync</h1>
+    <p class="lead">
+        Сервис управления онлайн-встречами и виртуальными комнатами.
+    </p>
+    <p>Основные разделы:</p>
+    <a href="{% url 'rooms:list' %}" class="btn btn-primary me-2">
+        Помещения
+    </a>
+    <a href="{% url 'bookings:bookings' %}" class="btn btn-secondary">
+        Бронирования
+    </a>
+{% endblock %}

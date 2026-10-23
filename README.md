@@ -1,42 +1,30 @@
 # MeetSync – сервис управления онлайн-встречами
 
-## Назначение
-MeetSync – приложение для управления виртуальными комнатами и онлайн-встречами.
-Консольная версия приложения (ПР3) дополнена веб-интерфейсом на Django (ПР5).
+Сервис управления онлайн-встречами и виртуальными комнатами на Python и Django.
 
-Приложение позволяет:
-* просматривать виртуальные комнаты в браузере;
-* просматривать информацию о конкретной онлайн-комнате;
-* просматривать список онлайн-встреч (бронирований) в браузере;
-* просматривать информацию о конкретной онлайн-встрече;
-* проверять доступность онлайн-комнаты на текущую дату;
-* работать с консольной версией приложения (`python main.py`).
+## 1. Назначение проекта
+MeetSync – учебное приложение для управления виртуальными залами (Zoom, Meet,
+Teams) и расписанием онлайн-встреч.
 
-## Используемые технологии
-* Python 3;
-* Django 5.2 – веб-фреймворк;
-* HTML – разметка веб-страниц;
-* CSS и Bootstrap 5.3 – оформление страниц;
-* pytest – автоматизированные тесты;
-* flake8 – проверка качества кода.
+## 2. Используемые технологии (ПР6)
+- Python 3;
+- Django 5.2;
+- Django Template Language (DTL);
+- HTML5, CSS3, JavaScript, Bootstrap 5.3;
+- JSON для хранения данных (`data/rooms.json`, `users.json`, `bookings.json`);
+- Git, pytest, flake8.
 
-## Страницы веб-интерфейса (ПР5)
-* `/` – главная страница (`homepage.views.index`);
-* `/rooms/` – список онлайн-комнат (`rooms.views.rooms`);
-* `/rooms/<int:room_id>/` – карточка комнаты (`rooms.views.room_detail`);
-* `/bookings/` – список онлайн-встреч (`bookings.views.bookings`);
-* `/bookings/<int:booking_id>/` – карточка встречи (`bookings.views.booking_detail`).
-Если комната или встреча не найдена, возвращается код статуса 404.
-Настроен `handler404 = "homepage.views.page_not_found"`.
-
-## Запуск приложения
-Веб-версия (Django):
-```bash
-python manage.py migrate
-python manage.py check
-python manage.py runserver
-```
-Консольная версия (сохранена):
-```bash
-python main.py
-```
+## 3. Шаблонная архитектура и статика (ПР6)
+- Базовый шаблон: `templates/base.html` (`{% block title %}`, `{% block content %}`);
+- Включаемые шаблоны (`{% include %}`):
+  - `templates/includes/navigation.html`
+  - `rooms/templates/rooms/includes/room_card.html`
+  - `bookings/templates/bookings/includes/booking_status.html`
+- Фильтры шаблонов: `{{ rooms|length }}`, `{{ room.name|default:"Без названия" }}`;
+- Именованные маршруты и пространства имён: `homepage:index`, `rooms:list`,
+  `rooms:detail`, `bookings:bookings`, `bookings:detail`;
+- Статические файлы (`homepage/static/homepage/`): `css/style.css`,
+  `js/main.js`, `img/logo.png`;
+- Функция `page()` из ПР5 полностью удалена; все представления используют
+  `render(request, ..., context)`.
+- Данные пока хранятся в JSON; Django ORM и формы ещё не используются.

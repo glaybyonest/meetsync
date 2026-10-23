@@ -1,91 +1,36 @@
-"""Представления (view-функции) приложения rooms (ПР5)."""
-from datetime import date
+"""Представления приложения rooms на основе шаблонов Django (ПР6)."""
+from django.shortcuts import render
 
-from django.http import HttpResponse
-
-from homepage.views import page
-from models.bookings import is_room_available
 from models.rooms import find_room_by_id
-from storage import load_bookings, load_rooms, load_users
+from storage import load_rooms
 
 
 def rooms(request):
-    """Отобразить список всех виртуальных комнат из data/rooms.json."""
-    items = ""
-    for room in load_rooms("data/rooms.json"):
-        text = (
-            f'<a href="/rooms/{room.id}/">{room.name}</a> '
-            f"({room.room_type}) – вместимость {room.capacity} чел."
-        )
-        items += f'<li class="list-group-item">{text}</li>'
-    content = f"""
-    <h1>Онлайн-комнаты</h1>
-    <ul class="list-group">{items}</ul>
-    """
-    return HttpResponse(page("MeetSync – онлайн-комнаты", content))
+    """Отобразить список онлайн-комнат через шаблон room_list.html."""
+    rooms_list = load_rooms("data/rooms.json")
+    context = {
+        "rooms": rooms_list,
+    }
+    return render(
+        request,
+        "rooms/room_list.html",
+        context,
+    )
 
 
 def room_detail(request, room_id: int):
-    """Отобразить страницу конкретной виртуальной комнаты по ID."""
+    """Отобразить страницу отдельной онлайн-комнаты или вернуть 404."""
     rooms_list = load_rooms("data/rooms.json")
-    room = find_room_by_id(rooms_list, room_id)
-
-    if room is None:
-        content = """
-        <h1 class="text-danger">Помещение не найдено</h1>
-        <a href="/rooms/" class="btn btn-outline-secondary">
-            ← к списку онлайн-комнат
-        </a>
-        """
-        return HttpResponse(
-            page("Помещение не найдено", content),
-            status=404,
-        )
-
-    users_list = load_users("data/users.json")
-    bookings_list = load_bookings(
-        "data/bookings.json",
+    room = find_room_by_id(
         rooms_list,
-        users_list,
+        room_id,
     )
-    available = is_room_available(
-        bookings_list,
-        room,
-        date.today(),
-    )
-    status = "доступно" if available else "занято"
-    badge = "bg-success" if available else "bg-danger"
-
-    content = f"""
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">{room.name}</h5>
-            <p class="card-text">
-                <strong>ID:</strong> {room.id}
-            </p>
-            <p class="card-text">
-                <strong>Платформа:</strong> {room.room_type}
-            </p>
-            <p class="card-text">
-                <strong>Вместимость:</strong> {room.capacity} мест
-            </p>
-            <p class="card-text">
-                <strong>Описание:</strong> {room.description}
-            </p>
-            <p class="card-text">
-                Доступность на текущую дату:
-                <span class="badge {badge}">
-                    {status}
-                </span>
-            </p>
-            <a href="/rooms/"
-               class="btn btn-outline-secondary">
-                ← к списку онлайн-комнат
-            </a>
-        </div>
-    </div>
-    """
-    return HttpResponse(
-        page(room.name, content),
-        status=200,
+    context = {
+        "room": room,
+    }
+    return render(
+        request,
+        "rooms/room_detail.html",
+        context,
+        status=404 if room is None else 200,
     )

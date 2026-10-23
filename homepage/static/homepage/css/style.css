@@ -1,0 +1,22 @@
+body {
+    min-height: 100vh;
+    background-color: #f8fafc;
+}
+
+.room-card {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+.booking-status {
+    font-weight: 600;
+}
+
+.meetsync-logo {
+    width: 64px;
+    height: auto;
+    margin: 0.5rem 0;
+}
