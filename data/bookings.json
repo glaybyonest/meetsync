@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "room_id": 1,
+    "booking_date": "2026-09-20"
+  },
+  {
+    "id": 2,
+    "room_id": 2,
+    "booking_date": "2026-09-21"
+  }
+]
