@@ -1,17 +1,23 @@
 [
   {
     "id": 1,
-    "name": "Аудитория 301 (Zoom-зал)",
-    "capacity": 30
+    "name": "Аудитория 301",
+    "capacity": 30,
+    "room_type": "Zoom",
+    "description": "Виртуальный зал для учебных вебинаров и групповых созвонов"
   },
   {
     "id": 2,
-    "name": "Конференц-зал Meet-Pro",
-    "capacity": 60
+    "name": "Конференц-зал",
+    "capacity": 60,
+    "room_type": "Google Meet",
+    "description": "Основной онлайн-зал для общих презентаций и демо-дней"
   },
   {
     "id": 3,
-    "name": "Компьютерный класс Teams",
-    "capacity": 25
+    "name": "Компьютерный класс",
+    "capacity": 25,
+    "room_type": "Microsoft Teams",
+    "description": "Виртуальная комната для код-ревью и практикумов"
   }
 ]

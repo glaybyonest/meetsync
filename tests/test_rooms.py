@@ -1,48 +1,47 @@
-"""Автоматические тесты функций работы с онлайн-комнатами (ПР2)."""
+"""Тесты класса Room и функций работы с комнатами (ПР3)."""
 
-from rooms import (
+from models import Room
+from models.rooms import (
     add_room,
     check_room_capacity,
     filter_rooms_by_capacity,
     find_room,
+    find_room_by_id,
     sort_rooms,
 )
 
 
-def test_add_room() -> None:
-    """Проверить добавление онлайн-комнаты в словарь."""
-    rooms: dict[int, dict] = {}
-    add_room(rooms, "Аудитория 301", 30)
-    assert len(rooms) == 1
-    assert rooms[1]["name"] == "Аудитория 301"
-    assert rooms[1]["capacity"] == 30
+def test_room_creation() -> None:
+    """Проверить создание объекта Room и его атрибуты."""
+    room = Room(1, "Аудитория 301", 30)
+    assert room.id == 1
+    assert room.name == "Аудитория 301"
+    assert room.capacity == 30
+    assert str(room) == "Аудитория 301, 30 мест"
+    assert "Аудитория 301" in room.info
 
 
-def test_find_room() -> None:
-    """Проверить поиск онлайн-комнаты по подстроке названия."""
-    rooms: dict[int, dict] = {}
-    add_room(rooms, "Аудитория 301", 30)
+def test_room_is_suitable_for() -> None:
+    """Проверить метод экземпляра is_suitable_for() и валидацию."""
+    room = Room(1, "Аудитория 301", 30)
+    assert room.is_suitable_for(20)
+    assert room.is_suitable_for(30)
+    assert not room.is_suitable_for(40)
+    assert Room.validate_capacity(30)
+    assert not Room.validate_capacity(0)
+
+
+def test_room_collection_functions() -> None:
+    """Проверить добавление, поиск, фильтрацию и сортировку объектов Room."""
+    rooms: list[Room] = []
     add_room(rooms, "Конференц-зал", 60)
-    found = find_room(rooms, "аудитория")
-    assert len(found) == 1
-    assert found[0]["id"] == 1
-
-
-def test_check_room_capacity() -> None:
-    """Проверить соответствие комнаты требуемой вместимости."""
-    rooms: dict[int, dict] = {}
-    add_room(rooms, "Конференц-зал", 60)
+    add_room(rooms, "Аудитория 301", 30)
+    assert len(rooms) == 2
+    assert find_room_by_id(rooms, 1) is rooms[0]
+    assert len(find_room(rooms, "аудитория")) == 1
     assert check_room_capacity(rooms, 1, 50)
-    assert not check_room_capacity(rooms, 1, 80)
-
-
-def test_filter_and_sort_rooms() -> None:
-    """Проверить генератор фильтрации и сортировку комнат."""
-    rooms: dict[int, dict] = {}
-    add_room(rooms, "Зал А", 60)
-    add_room(rooms, "Зал Б", 15)
-    add_room(rooms, "Зал В", 30)
-    filtered = list(filter_rooms_by_capacity(rooms, 25))
-    assert len(filtered) == 2
+    assert not check_room_capacity(rooms, 2, 50)
+    filtered = list(filter_rooms_by_capacity(rooms, 40))
+    assert len(filtered) == 1
     ordered = sort_rooms(rooms)
-    assert [r["capacity"] for r in ordered] == [15, 30, 60]
+    assert [r.capacity for r in ordered] == [30, 60]
